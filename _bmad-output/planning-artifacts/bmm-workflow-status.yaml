@@ -1,0 +1,95 @@
+# BMM Workflow Status - Parsimonie
+# Generated: 2026-01-22
+# Track: BMad Method (Greenfield)
+
+generated: "2026-01-22"
+project: "Parsimonie"
+project_type: "WoW Guild Management Platform"
+selected_track: "bmad-method"
+field_type: "greenfield"
+workflow_path: "method-greenfield.yaml"
+
+# STATUS KEY:
+# - required/optional/recommended/conditional: Not yet completed
+# - {file-path}: Completed (path to artifact)
+# - skipped: Optional workflow that was skipped
+
+workflow_status:
+  # Phase 1: Analysis (Optional Discovery)
+  phase_1_analysis:
+    brainstorm-project:
+      status: "_bmad-output/analysis/brainstorming-session-2026-01-22.md"
+      included: true
+      agent: "analyst"
+      command: "/bmad:bmm:workflows:brainstorming"
+      note: "Completed - 283 ideas generated, prioritized into MVP/Nice-to-Have/Future"
+    
+    research:
+      status: "_bmad-output/planning-artifacts/research/technical-parsimonie-apis-research-2026-01-22.md"
+      included: true
+      agent: "analyst"
+      command: "/bmad:bmm:workflows:research"
+      note: "Completed - Technical research on Battle.net, WarcraftLogs, Discord, Wowhead APIs"
+    
+    product-brief:
+      status: "in-progress"
+      included: true
+      agent: "analyst"
+      command: "/bmad:bmm:workflows:create-product-brief"
+      note: "Step 2 Vision Discovery in progress - resume with pending questions"
+      artifact: "_bmad-output/planning-artifacts/product-brief-parsimonie-2026-01-22.md"
+
+  # Phase 2: Planning
+  phase_2_planning:
+    prd:
+      status: "required"
+      agent: "pm"
+      command: "/bmad:bmm:workflows:create-prd"
+      note: "Product Requirements Document with FRs and NFRs"
+    
+    create-ux-design:
+      status: "conditional"
+      condition: "if_has_ui"
+      agent: "ux-designer"
+      command: "/bmad:bmm:workflows:create-ux-design"
+      note: "Determined after PRD"
+
+  # Phase 3: Solutioning
+  phase_3_solutioning:
+    create-architecture:
+      status: "required"
+      agent: "architect"
+      command: "/bmad:bmm:workflows:create-architecture"
+      note: "Complete system design"
+    
+    create-epics-and-stories:
+      status: "required"
+      agent: "pm"
+      command: "/bmad:bmm:workflows:create-epics-and-stories"
+      note: "Break down PRD into implementable epics and stories"
+    
+    test-design:
+      status: "optional"
+      agent: "tea"
+      command: "/bmad:bmm:workflows:test-design"
+      note: "System-level testability review"
+    
+    implementation-readiness:
+      status: "required"
+      agent: "architect"
+      command: "/bmad:bmm:workflows:implementation-readiness"
+      note: "Validates PRD + Architecture + Epics + UX"
+
+  # Phase 4: Implementation
+  phase_4_implementation:
+    sprint-planning:
+      status: "required"
+      agent: "sm"
+      command: "/bmad:bmm:workflows:sprint-planning"
+      note: "Creates sprint plan - subsequent work tracked there"
+
+# Next Action
+next:
+  workflow: "research"
+  agent: "analyst"
+  command: "/bmad:bmm:workflows:research"
