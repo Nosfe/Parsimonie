@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+packages/
+
+# Build outputs
+bin/
+obj/
+dist/
+out/
+.angular/
+
+# IDE
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+postgres_data/
+
+# Test results
+TestResults/
+coverage/
+
+# Misc
+*.swp
+*.bak
+*.tmp
