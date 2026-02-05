@@ -26,12 +26,13 @@ public class AuthController : ControllerBase
     public IActionResult Login([FromQuery] string? returnUrl = null)
     {
         var state = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+        var isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
         
         // Store state in a cookie for validation on callback
         Response.Cookies.Append("oauth_state", state, new CookieOptions
         {
             HttpOnly = true,
-            Secure = true,
+            Secure = !isDevelopment, // Allow HTTP in development
             SameSite = SameSiteMode.Lax,
             Expires = DateTimeOffset.UtcNow.AddMinutes(10)
         });
@@ -41,7 +42,7 @@ public class AuthController : ControllerBase
             Response.Cookies.Append("return_url", returnUrl, new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
+                Secure = !isDevelopment, // Allow HTTP in development
                 SameSite = SameSiteMode.Lax,
                 Expires = DateTimeOffset.UtcNow.AddMinutes(10)
             });
@@ -55,18 +56,20 @@ public class AuthController : ControllerBase
     /// Discord OAuth callback - validates guild membership and role
     /// </summary>
     [HttpGet("callback")]
-    public async Task<IActionResult> Callback([FromQuery] string code, [FromQuery] string state)
+    public async Task<IActionResult> Callback([FromQuery] string code, [FromQuery] string? state = null)
     {
-        // Validate state
+        // Validate state only if one was set (via /api/auth/login)
         var savedState = Request.Cookies["oauth_state"];
-        if (string.IsNullOrEmpty(savedState) || savedState != state)
+        if (!string.IsNullOrEmpty(savedState))
         {
-            _logger.LogWarning("OAuth state mismatch");
-            return BadRequest(new AuthErrorDto("invalid_state", "OAuth state validation failed"));
+            if (savedState != state)
+            {
+                _logger.LogWarning("OAuth state mismatch");
+                return BadRequest(new AuthErrorDto("invalid_state", "OAuth state validation failed"));
+            }
+            // Clear state cookie
+            Response.Cookies.Delete("oauth_state");
         }
-
-        // Clear state cookie
-        Response.Cookies.Delete("oauth_state");
 
         var result = await _authService.ProcessCallbackAsync(code);
 

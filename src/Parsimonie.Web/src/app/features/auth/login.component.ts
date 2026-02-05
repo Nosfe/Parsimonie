@@ -1,4 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
@@ -47,6 +48,21 @@ import { AuthService } from '../../core/services/auth.service';
               Continue with Discord
             }
           </button>
+
+          <!-- Demo Mode Button -->
+          <div class="mt-6 pt-6 border-t border-netherstorm">
+            <p class="text-gray-500 text-xs mb-3">Preview mode (no login required)</p>
+            <button 
+              (click)="enterDemo()"
+              class="w-full flex items-center justify-center gap-2 py-2 px-4 bg-netherstorm text-tbc-gold rounded-lg hover:bg-portal-black transition-colors border border-tbc-gold/30"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              Enter Demo Mode
+            </button>
+          </div>
         </div>
 
         <!-- Footer -->
@@ -57,13 +73,26 @@ import { AuthService } from '../../core/services/auth.service';
     </div>
   `
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   readonly isLoading = signal(false);
+
+  ngOnInit(): void {
+    // If already authenticated (demo mode), redirect to dashboard
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/dashboard']);
+    }
+  }
 
   login(): void {
     this.isLoading.set(true);
     this.authService.login();
+  }
+
+  enterDemo(): void {
+    // Just navigate to dashboard - demo mode auto-authenticates
+    this.router.navigate(['/dashboard']);
   }
 }
