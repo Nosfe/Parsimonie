@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap');
+
+@import "tailwindcss";
+
+/* TBC Color Theme */
+@theme {
+  --color-portal-black: #0d0f0e;
+  --color-outland-gray: #1a1d1c;
+  --color-netherstorm: #252a28;
+  --color-fel-green: #70c04a;
+  --color-fel-glow: #9dd977;
+  --color-tbc-gold: #d4a843;
+  --color-bronze: #c49a3d;
+  --color-text-primary: #e8e8e8;
+  --color-text-secondary: #a0a0a0;
+  
+  --font-sans: 'Inter', sans-serif;
+  --font-heading: 'Outfit', sans-serif;
+}
+
+/* Base styles */
+body {
+  background-color: var(--color-portal-black);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+}
+
+/* Custom component classes */
+@layer components {
+  .btn-primary {
+    @apply bg-fel-green hover:bg-fel-glow text-portal-black font-semibold py-2 px-4 rounded-lg transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply bg-tbc-gold hover:bg-bronze text-portal-black font-semibold py-2 px-4 rounded-lg transition-colors;
+  }
+  
+  .card {
+    @apply bg-outland-gray rounded-lg p-4 border border-netherstorm;
+  }
+  
+  .input {
+    @apply bg-netherstorm border border-text-secondary/30 rounded-lg px-4 py-2 text-text-primary placeholder-text-secondary focus:border-fel-green focus:outline-none;
+  }
+}

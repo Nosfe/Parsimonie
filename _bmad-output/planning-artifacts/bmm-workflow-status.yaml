@@ -92,10 +92,12 @@ workflow_status:
 
 # Next Action
 next:
-  workflow: "create-ux-design"
-  agent: "ux-designer"
-  command: "/bmad:bmm:workflows:create-ux-design"
-  step: 5
-  step_name: "Inspiration Analysis"
-  artifact: "_bmad-output/planning-artifacts/ux-design-specification.md"
-  note: "Resume at Step 5: Inspiration - analyze reference products for UX patterns"
+  workflow: "feature-dev"
+  agent: "quick-flow-solo-dev"
+  command: "/bmad:bmm:agents:quick-flow-solo-dev"
+  note: "Foundation complete. Ready for feature tech specs (Characters/Gear, Raids, etc)."
+  completed_specs:
+    - slug: "foundation"
+      artifact: "_bmad-output/implementation-artifacts/tech-spec-foundation.md"
+      stories_completed: [1, 2, 3, 4, 5, 6]
+      status: "complete"

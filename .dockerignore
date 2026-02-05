@@ -1,0 +1,35 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.vs
+.vscode
+.idea
+*.user
+*.suo
+
+# Build outputs
+**/bin
+**/obj
+**/node_modules
+**/dist
+
+# Docker
+.docker
+
+# Documentation
+*.md
+_bmad
+_bmad-output
+
+# Tests
+**/*.Tests
+**/tests
+
+# Logs
+logs
+*.log
+
+# Angular cache
+.angular

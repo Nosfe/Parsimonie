@@ -2,9 +2,9 @@
 title: 'Parsimonie Foundation'
 slug: 'foundation'
 created: '2026-02-05'
-status: 'in-progress'
-stepsCompleted: [1, 2, 3, 4]
-nextStep: 5
+status: 'complete'
+stepsCompleted: [1, 2, 3, 4, 5, 6]
+nextStep: null
 tech_stack:
   - '.NET 10'
   - 'Angular 21'
