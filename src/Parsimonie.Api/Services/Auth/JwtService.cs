@@ -9,6 +9,7 @@ using Parsimonie.Api.Infrastructure.Data;
 using Parsimonie.Api.Infrastructure.Extensions;
 using Parsimonie.Api.Models.Entities;
 using Parsimonie.Api.Models.Enums;
+using Parsimonie.Api.Services.Auth.Interfaces;
 
 namespace Parsimonie.Api.Services.Auth;
 
@@ -28,7 +29,7 @@ public class JwtService : IJwtService
         _logger = logger;
     }
 
-    public string GenerateAccessToken(User user)
+    public string GenerateAccessToken(Models.Entities.User user)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Secret));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -68,7 +69,7 @@ public class JwtService : IJwtService
         return Convert.ToBase64String(randomBytes);
     }
 
-    public async Task<RefreshToken> CreateRefreshTokenAsync(User user)
+    public async Task<RefreshToken> CreateRefreshTokenAsync(Models.Entities.User user)
     {
         var refreshToken = new RefreshToken
         {
@@ -85,7 +86,7 @@ public class JwtService : IJwtService
         return refreshToken;
     }
 
-    public async Task<User?> ValidateRefreshTokenAsync(string token)
+    public async Task<Models.Entities.User?> ValidateRefreshTokenAsync(string token)
     {
         var refreshToken = await _dbContext.RefreshTokens
             .Include(rt => rt.User)

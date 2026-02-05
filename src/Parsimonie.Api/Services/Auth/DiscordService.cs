@@ -2,6 +2,7 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using Microsoft.Extensions.Options;
 using Parsimonie.Api.Infrastructure.Extensions;
+using Parsimonie.Api.Services.Auth.Interfaces;
 
 namespace Parsimonie.Api.Services.Auth;
 
@@ -56,7 +57,7 @@ public class DiscordService : IDiscordService
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
-                _logger.LogError("Discord token exchange failed: {Error}", error);
+                Log.TokenExchangeFailed(_logger, error);
                 return null;
             }
 
@@ -65,7 +66,7 @@ public class DiscordService : IDiscordService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error exchanging Discord code");
+            Log.ExchangeCodeError(_logger, ex);
             return null;
         }
     }
@@ -81,7 +82,7 @@ public class DiscordService : IDiscordService
             
             if (!response.IsSuccessStatusCode)
             {
-                _logger.LogError("Failed to get Discord user: {Status}", response.StatusCode);
+                Log.GetUserFailed(_logger, response.StatusCode);
                 return null;
             }
 
@@ -90,7 +91,7 @@ public class DiscordService : IDiscordService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error getting Discord user");
+            Log.GetUserError(_logger, ex);
             return null;
         }
     }
@@ -107,13 +108,13 @@ public class DiscordService : IDiscordService
             
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                _logger.LogWarning("User is not a member of guild {GuildId}", guildId);
+                Log.UserNotInGuild(_logger, guildId);
                 return null;
             }
 
             if (!response.IsSuccessStatusCode)
             {
-                _logger.LogError("Failed to get guild member: {Status}", response.StatusCode);
+                Log.GetGuildMemberFailed(_logger, response.StatusCode);
                 return null;
             }
 
@@ -122,26 +123,53 @@ public class DiscordService : IDiscordService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error getting guild member");
+            Log.GetGuildMemberError(_logger, ex);
             return null;
         }
     }
 
     public bool HasRequiredRole(DiscordGuildMember member, string roleName, List<DiscordRole> guildRoles)
     {
-        if (member.roles == null || member.roles.Length == 0)
+        if (member.Roles == null || member.Roles.Length == 0)
             return false;
 
         // Find the role ID for the required role name
         var requiredRole = guildRoles.FirstOrDefault(r => 
-            r.name.Equals(roleName, StringComparison.OrdinalIgnoreCase));
+            r.Name.Equals(roleName, StringComparison.OrdinalIgnoreCase));
 
         if (requiredRole == null)
         {
-            _logger.LogWarning("Role '{RoleName}' not found in guild roles", roleName);
+            Log.RoleNotFound(_logger, roleName);
             return false;
         }
 
-        return member.roles.Contains(requiredRole.id);
+        return member.Roles.Contains(requiredRole.Id);
     }
+}
+
+internal static partial class Log
+{
+    [LoggerMessage(Level = LogLevel.Error, Message = "Discord token exchange failed: {Error}")]
+    public static partial void TokenExchangeFailed(ILogger logger, string error);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Error exchanging Discord code")]
+    public static partial void ExchangeCodeError(ILogger logger, Exception ex);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Failed to get Discord user: {Status}")]
+    public static partial void GetUserFailed(ILogger logger, System.Net.HttpStatusCode status);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Error getting Discord user")]
+    public static partial void GetUserError(ILogger logger, Exception ex);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "User is not a member of guild {GuildId}")]
+    public static partial void UserNotInGuild(ILogger logger, string guildId);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Failed to get guild member: {Status}")]
+    public static partial void GetGuildMemberFailed(ILogger logger, System.Net.HttpStatusCode status);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Error getting guild member")]
+    public static partial void GetGuildMemberError(ILogger logger, Exception ex);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Role '{RoleName}' not found in guild roles")]
+    public static partial void RoleNotFound(ILogger logger, string roleName);
 }

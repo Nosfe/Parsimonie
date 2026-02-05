@@ -21,6 +21,10 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'roster',
+    loadChildren: () => import('./features/roster/roster.routes').then(m => m.rosterRoutes)
+  },
+  {
     path: '**',
     redirectTo: 'dashboard'
   }

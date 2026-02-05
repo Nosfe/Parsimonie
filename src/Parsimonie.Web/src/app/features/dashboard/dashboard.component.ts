@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ApiService } from '../../core/services/api.service';
 import { MeResponse } from '../../core/models/user.model';
@@ -7,6 +7,7 @@ import { MeResponse } from '../../core/models/user.model';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
+  imports: [RouterLink],
   template: `
     <div class="min-h-screen bg-portal-black">
       <!-- Header -->
@@ -104,14 +105,22 @@ import { MeResponse } from '../../core/models/user.model';
             </div>
           </div>
 
-          <!-- Placeholder for future features -->
-          <div class="bg-outland-gray border border-netherstorm border-dashed rounded-lg p-12 text-center">
-            <p class="text-gray-500 text-lg">
-              🚀 More features coming soon...
-            </p>
-            <p class="text-gray-600 mt-2">
-              Roster management, raid signups, and more
-            </p>
+          <!-- Quick Links -->
+          <h3 class="text-lg font-semibold text-tbc-gold mb-4">Quick Links</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <a routerLink="/roster" 
+               class="bg-outland-gray hover:bg-netherstorm border border-netherstorm rounded-lg p-6 transition-colors">
+              <h4 class="text-fel-green font-semibold text-lg mb-2">Guild Roster</h4>
+              <p class="text-text-secondary text-sm">View all guild members and their characters</p>
+            </a>
+            <div class="bg-outland-gray border border-netherstorm border-dashed rounded-lg p-6 opacity-50">
+              <h4 class="text-gray-500 font-semibold text-lg mb-2">My Gear</h4>
+              <p class="text-gray-600 text-sm">Coming soon...</p>
+            </div>
+            <div class="bg-outland-gray border border-netherstorm border-dashed rounded-lg p-6 opacity-50">
+              <h4 class="text-gray-500 font-semibold text-lg mb-2">Tonight's Raid</h4>
+              <p class="text-gray-600 text-sm">Coming soon...</p>
+            </div>
           </div>
         }
       </main>

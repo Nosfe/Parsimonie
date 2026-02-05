@@ -32,14 +32,22 @@ public class ParsimonieDbContext : DbContext
         modelBuilder.Entity<Character>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.HasIndex(e => new { e.Name, e.Realm });
-            entity.Property(e => e.Name).HasMaxLength(50).IsRequired();
+            entity.HasIndex(e => new { e.Name, e.Realm }).IsUnique();
+            entity.Property(e => e.Name).HasMaxLength(12).IsRequired();  // WoW name limit
             entity.Property(e => e.Realm).HasMaxLength(50).IsRequired();
+            entity.Property(e => e.Notes).HasMaxLength(500);
             
+            // Owner relationship (nullable - character can exist before assignment)
             entity.HasOne(e => e.User)
                   .WithMany(u => u.Characters)
                   .HasForeignKey(e => e.UserId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                  .OnDelete(DeleteBehavior.SetNull);
+            
+            // Created by relationship
+            entity.HasOne(e => e.CreatedByUser)
+                  .WithMany()
+                  .HasForeignKey(e => e.CreatedByUserId)
+                  .OnDelete(DeleteBehavior.SetNull);
         });
 
         // RefreshToken configuration

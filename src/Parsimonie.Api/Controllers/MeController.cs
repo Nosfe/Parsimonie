@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Parsimonie.Api.Infrastructure.Data;
 using Parsimonie.Api.Models.DTOs.User;
-using Parsimonie.Api.Models.Enums;
+using Parsimonie.Api.Services.User.Interfaces;
 
 namespace Parsimonie.Api.Controllers;
 
@@ -12,12 +10,12 @@ namespace Parsimonie.Api.Controllers;
 [Route("api/[controller]")]
 public class MeController : BaseController
 {
-    private readonly ParsimonieDbContext _dbContext;
+    private readonly IUserService _userService;
     private readonly ILogger<MeController> _logger;
 
-    public MeController(ParsimonieDbContext dbContext, ILogger<MeController> logger)
+    public MeController(IUserService userService, ILogger<MeController> logger)
     {
-        _dbContext = dbContext;
+        _userService = userService;
         _logger = logger;
     }
 
@@ -30,36 +28,15 @@ public class MeController : BaseController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetMe()
     {
-        var user = await _dbContext.Users
-            .Include(u => u.Characters)
-            .FirstOrDefaultAsync(u => u.Id == CurrentUserId);
+        var profile = await _userService.GetUserProfileAsync(CurrentUserId);
 
-        if (user == null)
+        if (profile == null)
         {
             _logger.LogWarning("User {UserId} not found in database", CurrentUserId);
             return NotFound(new { error = "user_not_found", message = "User not found" });
         }
 
-        var response = new MeResponseDto(
-            Id: user.Id,
-            DiscordId: user.DiscordId,
-            Username: user.DiscordUsername,
-            Avatar: user.DiscordAvatar,
-            Roles: GetRoleStrings(user.Roles),
-            CreatedAt: user.CreatedAt,
-            LastLoginAt: user.LastLoginAt,
-            Characters: user.Characters.Select(c => new CharacterDto(
-                Id: c.Id,
-                Name: c.Name,
-                Realm: c.Realm,
-                Class: c.Class,
-                Spec: c.Spec,
-                IsMain: c.IsMain,
-                CreatedAt: c.CreatedAt
-            )).ToList()
-        );
-
-        return Ok(response);
+        return Ok(profile);
     }
 
     /// <summary>
@@ -70,30 +47,7 @@ public class MeController : BaseController
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetMyCharacters()
     {
-        var characters = await _dbContext.Characters
-            .Where(c => c.UserId == CurrentUserId)
-            .OrderByDescending(c => c.IsMain)
-            .ThenBy(c => c.Name)
-            .Select(c => new CharacterDto(
-                c.Id,
-                c.Name,
-                c.Realm,
-                c.Class,
-                c.Spec,
-                c.IsMain,
-                c.CreatedAt
-            ))
-            .ToListAsync();
-
+        var characters = await _userService.GetUserCharactersAsync(CurrentUserId);
         return Ok(characters);
-    }
-
-    private static string[] GetRoleStrings(UserRole roles)
-    {
-        var roleList = new List<string>();
-        if (roles.HasFlag(UserRole.GM)) roleList.Add("GM");
-        if (roles.HasFlag(UserRole.Officer)) roleList.Add("Officer");
-        if (roles.HasFlag(UserRole.Raider)) roleList.Add("Raider");
-        return roleList.ToArray();
     }
 }

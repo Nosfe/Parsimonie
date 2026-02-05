@@ -1,0 +1,33 @@
+<Project>
+  <!-- Common build settings for all projects -->
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+  </PropertyGroup>
+
+  <!-- Clean Architecture Conventions -->
+  <!-- 
+    Project Structure follows Clean Architecture:
+    - Domain layer: Core entities and interfaces (no dependencies)
+    - Application layer: Use cases, DTOs, service interfaces
+    - Infrastructure layer: Database, external services implementations
+    - API layer: Controllers (thin), DI configuration
+    
+    SOLID Principles enforced:
+    - Single Responsibility: Each class has one reason to change
+    - Open/Closed: Extend via interfaces, not modifications  
+    - Liskov Substitution: Interfaces allow mock implementations
+    - Interface Segregation: Small, focused interfaces per domain
+    - Dependency Inversion: Depend on abstractions (interfaces)
+    
+    Code Organization Rules:
+    - Interfaces MUST be placed in an Interfaces/ subfolder within each service folder
+      Example: Services/Auth/Interfaces/IAuthService.cs
+    - This improves readability and separates contracts from implementations
+    - Implementations remain in the parent folder (e.g., Services/Auth/AuthService.cs)
+  -->
+</Project>

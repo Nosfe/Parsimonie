@@ -6,6 +6,11 @@ using Microsoft.OpenApi.Models;
 using Parsimonie.Api.Infrastructure.Data;
 using Parsimonie.Api.Infrastructure.Extensions;
 using Parsimonie.Api.Services.Auth;
+using Parsimonie.Api.Services.Auth.Interfaces;
+using Parsimonie.Api.Services.Roster;
+using Parsimonie.Api.Services.Roster.Interfaces;
+using Parsimonie.Api.Services.User;
+using Parsimonie.Api.Services.User.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +57,11 @@ builder.Services.AddHttpClient<IDiscordService, DiscordService>();
 
 // Auth services
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+// Domain services
+builder.Services.AddScoped<IRosterService, RosterService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 // JWT Authentication
 var jwtSecret = builder.Configuration["Jwt:Secret"] ?? throw new InvalidOperationException("JWT Secret not configured");

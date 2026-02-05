@@ -18,7 +18,9 @@ public record CharacterDto(
     string Name,
     string Realm,
     WowClass Class,
-    WowSpec Spec,
+    WowSpec PrimarySpec,
+    WowSpec? SecondarySpec,
     bool IsMain,
+    bool IsActive,
     DateTime CreatedAt
 );

@@ -1,5 +1,5 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
@@ -16,9 +16,9 @@ import { AuthService } from '../../core/services/auth.service';
         <h2 class="text-xl text-white mb-2">Authenticating...</h2>
         <p class="text-gray-400">Opening the Dark Portal</p>
         
-        @if (error) {
+        @if (error()) {
           <div class="mt-6 bg-red-900/50 border border-red-500 rounded-lg p-4 max-w-md mx-auto">
-            <p class="text-red-400">{{ error }}</p>
+            <p class="text-red-400">{{ error() }}</p>
             <button 
               (click)="goToLogin()"
               class="mt-4 btn-secondary"
@@ -32,29 +32,34 @@ import { AuthService } from '../../core/services/auth.service';
   `
 })
 export class AuthCallbackComponent implements OnInit {
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
 
-  error: string | null = null;
+  readonly error = signal<string | null>(null);
 
   ngOnInit(): void {
-    // Get tokens from query params (sent by API after Discord OAuth)
-    const params = this.route.snapshot.queryParams;
+    this.processCallback();
+  }
+
+  private processCallback(): void {
+    // Tokens are in the URL fragment (hash), not query params
+    // Example: /auth/callback#access_token=xxx&refresh_token=yyy
+    const fragment = window.location.hash.substring(1); // Remove the #
+    const params = new URLSearchParams(fragment);
     
-    const accessToken = params['access_token'];
-    const refreshToken = params['refresh_token'];
-    const errorParam = params['error'];
+    const accessToken = params.get('access_token');
+    const refreshToken = params.get('refresh_token');
+    const errorParam = params.get('error');
 
     if (errorParam) {
-      this.error = this.getErrorMessage(errorParam);
+      this.error.set(this.getErrorMessage(errorParam));
       return;
     }
 
     if (accessToken && refreshToken) {
       this.authService.handleCallback(accessToken, refreshToken);
     } else {
-      this.error = 'Invalid callback - missing tokens';
+      this.error.set('Invalid callback - missing authentication tokens');
     }
   }
 
