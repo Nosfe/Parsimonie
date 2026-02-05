@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parsimonie - Design Directions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* TBC Palette */
+            --bg-deep: #0d0f0e;
+            --bg-surface: #1a1d1c;
+            --bg-elevated: #252a28;
+            --bg-hover: #2d3230;
+            --fel-green: #70c04a;
+            --fel-green-light: #9dd977;
+            --fel-green-dim: #4a8033;
+            --tbc-gold: #d4a843;
+            --bronze: #c49a3d;
+            --text-primary: #e8e6e1;
+            --text-secondary: #9a9a96;
+            --text-muted: #6b6b6b;
+            --border: #333836;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        /* Navigation */
+        .direction-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .direction-nav h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--fel-green);
+        }
+
+        .direction-tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .direction-tab {
+            padding: 8px 16px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .direction-tab:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .direction-tab.active {
+            background: var(--fel-green-dim);
+            border-color: var(--fel-green);
+            color: var(--fel-green-light);
+        }
+
+        /* Sections */
+        .direction-section {
+            display: none;
+            padding: 88px 24px 48px;
+            min-height: 100vh;
+        }
+
+        .direction-section.active {
+            display: block;
+        }
+
+        .section-header {
+            max-width: 1280px;
+            margin: 0 auto 32px;
+        }
+
+        .section-header h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        /* Direction 1: Dashboard Focus */
+        .mockup-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background: var(--bg-surface);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        /* App Header */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--fel-green) 0%, var(--fel-green-dim) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--bg-deep);
+        }
+
+        .app-logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .app-nav {
+            display: flex;
+            gap: 4px;
+        }
+
+        .nav-item {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--fel-green-dim);
+            color: var(--fel-green-light);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: var(--tbc-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--bg-deep);
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 24px;
+        }
+
+        /* Tonight's Raid Card */
+        .tonight-card {
+            background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg-surface) 100%);
+            border: 1px solid var(--fel-green-dim);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .tonight-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .tonight-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--fel-green);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tonight-time {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .tonight-raid {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .raid-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--bg-hover);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .raid-info h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .raid-info p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .your-role {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-hover);
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--tbc-gold);
+        }
+
+        .role-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--tbc-gold);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .role-text {
+            font-weight: 600;
+            color: var(--tbc-gold);
+        }
+
+        /* Status Row */
+        .status-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .status-card {
+            flex: 1;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .status-card.ready {
+            border-color: var(--fel-green-dim);
+        }
+
+        .status-card.action {
+            border-color: var(--tbc-gold);
+        }
+
+        .status-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .status-value {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .status-value.ready {
+            color: var(--fel-green);
+        }
+
+        .status-value.action {
+            color: var(--tbc-gold);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-dot.ready {
+            background: var(--fel-green);
+            box-shadow: 0 0 8px var(--fel-green);
+        }
+
+        .status-dot.action {
+            background: var(--tbc-gold);
+            box-shadow: 0 0 8px var(--tbc-gold);
+        }
+
+        /* Boss Pills */
+        .boss-section {
+            margin-bottom: 24px;
+        }
+
+        .boss-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .boss-section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .boss-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .boss-pill {
+            padding: 10px 16px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .boss-pill:hover {
+            background: var(--bg-hover);
+            border-color: var(--fel-green-dim);
+            color: var(--text-primary);
+        }
+
+        .boss-pill.active {
+            background: var(--fel-green-dim);
+            border-color: var(--fel-green);
+            color: var(--fel-green-light);
+        }
+
+        .boss-pill.has-assignments::after {
+            content: '•';
+            margin-left: 6px;
+            color: var(--tbc-gold);
+        }
+
+        /* Boss Expanded */
+        .boss-expanded {
+            background: var(--bg-elevated);
+            border: 1px solid var(--fel-green-dim);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 12px;
+        }
+
+        .boss-expanded-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .boss-expanded-header h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .assignment-tag {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 4px 8px;
+            background: var(--tbc-gold);
+            color: var(--bg-deep);
+            border-radius: 4px;
+        }
+
+        .assignment-list {
+            list-style: none;
+        }
+
+        .assignment-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .assignment-list li::before {
+            content: '→';
+            color: var(--fel-green);
+            font-weight: 600;
+        }
+
+        /* Tab Content Cards */
+        .tab-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .tab-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-card:hover {
+            border-color: var(--fel-green-dim);
+            background: var(--bg-hover);
+        }
+
+        .tab-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .tab-card-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-hover);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .tab-card-title {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .tab-card-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Direction 2: Compact Cards */
+        .compact-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+        }
+
+        .compact-main {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .compact-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .compact-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .compact-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .compact-card-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Direction 3: Full Width */
+        .full-width-section {
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 24px;
+        }
+
+        .full-width-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-inline {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table td {
+            padding: 12px 16px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table tr:hover td {
+            background: var(--bg-hover);
+        }
+
+        /* Mini Stats */
+        .mini-stats {
+            display: flex;
+            gap: 24px;
+        }
+
+        .mini-stat {
+            text-align: center;
+        }
+
+        .mini-stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--fel-green);
+        }
+
+        .mini-stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-hover);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--fel-green) 0%, var(--fel-green-light) 100%);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        /* Variations Section */
+        .variations-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .variation-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .variation-preview {
+            height: 200px;
+            background: var(--bg-elevated);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .variation-info {
+            padding: 16px;
+        }
+
+        .variation-info h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .variation-info p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Color Swatches */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .color-swatch {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .swatch-name {
+            font-size: 11px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .swatch-hex {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .compact-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .variations-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="direction-nav">
+        <h1>🎨 Parsimonie Design Directions</h1>
+        <div class="direction-tabs">
+            <button class="direction-tab active" onclick="showDirection('dashboard')">Dashboard Focus</button>
+            <button class="direction-tab" onclick="showDirection('compact')">Compact Cards</button>
+            <button class="direction-tab" onclick="showDirection('fullwidth')">Full Width</button>
+            <button class="direction-tab" onclick="showDirection('colors')">Color System</button>
+        </div>
+    </nav>
+
+    <!-- Direction 1: Dashboard Focus -->
+    <section id="dashboard" class="direction-section active">
+        <div class="section-header">
+            <h2>Direction 1: Dashboard Focus</h2>
+            <p>Emphasis on the "5-second glance" — tonight's raid and role dominate the viewport. Boss assignments expand inline.</p>
+        </div>
+
+        <div class="mockup-container">
+            <!-- App Header -->
+            <header class="app-header">
+                <div class="app-logo">
+                    <div class="app-logo-icon">P</div>
+                    <span class="app-logo-text">Parsimonie</span>
+                </div>
+                <nav class="app-nav">
+                    <div class="nav-item active">Tonight</div>
+                    <div class="nav-item">Roster</div>
+                    <div class="nav-item">My Loot</div>
+                    <div class="nav-item">Last Raid</div>
+                </nav>
+                <div class="user-avatar">YJ</div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Tonight's Raid Card -->
+                <div class="tonight-card">
+                    <div class="tonight-header">
+                        <span class="tonight-label">⚔️ Tonight's Raid</span>
+                        <span class="tonight-time">Wednesday, Feb 5 • 8:00 PM Server</span>
+                    </div>
+                    <div class="tonight-raid">
+                        <div class="raid-icon">🏰</div>
+                        <div class="raid-info">
+                            <h3>Karazhan</h3>
+                            <p>Full Clear • 10 Players Confirmed</p>
+                        </div>
+                    </div>
+                    <div class="your-role">
+                        <div class="role-icon">🛡️</div>
+                        <span class="role-text">Main Tank</span>
+                    </div>
+                </div>
+
+                <!-- Status Row -->
+                <div class="status-row">
+                    <div class="status-card ready">
+                        <div class="status-label">Gear Status</div>
+                        <div class="status-value ready">
+                            <span class="status-dot ready"></span>
+                            Ready
+                        </div>
+                    </div>
+                    <div class="status-card ready">
+                        <div class="status-label">Consumables</div>
+                        <div class="status-value ready">
+                            <span class="status-dot ready"></span>
+                            Fully Stocked
+                        </div>
+                    </div>
+                    <div class="status-card action">
+                        <div class="status-label">Enchants</div>
+                        <div class="status-value action">
+                            <span class="status-dot action"></span>
+                            1 Missing
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boss Section -->
+                <div class="boss-section">
+                    <div class="boss-section-header">
+                        <span class="boss-section-title">Your Assignments by Boss</span>
+                    </div>
+                    <div class="boss-pills">
+                        <div class="boss-pill has-assignments">Attumen</div>
+                        <div class="boss-pill active has-assignments">Moroes</div>
+                        <div class="boss-pill">Maiden</div>
+                        <div class="boss-pill has-assignments">Opera</div>
+                        <div class="boss-pill has-assignments">Curator</div>
+                        <div class="boss-pill">Shade</div>
+                        <div class="boss-pill">Chess</div>
+                        <div class="boss-pill has-assignments">Prince</div>
+                        <div class="boss-pill">Nightbane</div>
+                    </div>
+
+                    <!-- Expanded Boss -->
+                    <div class="boss-expanded">
+                        <div class="boss-expanded-header">
+                            <h4>Moroes</h4>
+                            <span class="assignment-tag">3 Assignments</span>
+                        </div>
+                        <ul class="assignment-list">
+                            <li>Kick Garotte on 3rd cast (watch timer)</li>
+                            <li>Pickup Baroness add — she pats from right</li>
+                            <li>Shield Wall at 30% if healers are behind on mana</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Quick Access -->
+                <div class="tab-cards">
+                    <div class="tab-card">
+                        <div class="tab-card-header">
+                            <div class="tab-card-icon">📊</div>
+                            <span class="tab-card-title">Last Raid Recap</span>
+                        </div>
+                        <div class="tab-card-desc">Karazhan — Jan 29 • 2 wipes, full clear in 2h 15m</div>
+                    </div>
+                    <div class="tab-card">
+                        <div class="tab-card-header">
+                            <div class="tab-card-icon">💎</div>
+                            <span class="tab-card-title">My Loot Priorities</span>
+                        </div>
+                        <div class="tab-card-desc">3 upgrades available tonight • Top: Moroes' Lucky Pocket Watch</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Direction 2: Compact Cards -->
+    <section id="compact" class="direction-section">
+        <div class="section-header">
+            <h2>Direction 2: Compact Cards</h2>
+            <p>Information-dense layout with sidebar for quick stats. Good for power users who want everything visible at once.</p>
+        </div>
+
+        <div class="mockup-container">
+            <header class="app-header">
+                <div class="app-logo">
+                    <div class="app-logo-icon">P</div>
+                    <span class="app-logo-text">Parsimonie</span>
+                </div>
+                <nav class="app-nav">
+                    <div class="nav-item active">Tonight</div>
+                    <div class="nav-item">Roster</div>
+                    <div class="nav-item">My Loot</div>
+                    <div class="nav-item">Last Raid</div>
+                </nav>
+                <div class="user-avatar">YJ</div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="compact-layout">
+                    <div class="compact-main">
+                        <!-- Raid Card -->
+                        <div class="compact-card">
+                            <div class="compact-card-header">
+                                <span class="compact-card-title">Tonight's Raid</span>
+                                <span class="tonight-time">8:00 PM</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div class="raid-icon" style="width: 48px; height: 48px; font-size: 20px;">🏰</div>
+                                <div>
+                                    <h3 style="font-size: 18px; margin-bottom: 2px;">Karazhan — Full Clear</h3>
+                                    <div class="your-role" style="display: inline-flex; padding: 6px 12px; font-size: 13px;">
+                                        <div class="role-icon" style="width: 18px; height: 18px; font-size: 11px;">🛡️</div>
+                                        <span class="role-text">Main Tank</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Boss Grid -->
+                        <div class="compact-card">
+                            <div class="compact-card-header">
+                                <span class="compact-card-title">Boss Assignments</span>
+                            </div>
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Boss</th>
+                                        <th>Your Assignment</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Attumen</strong></td>
+                                        <td>Tank Midnight, swap at 50%</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Moroes</strong></td>
+                                        <td>Kick Garotte 3rd cast, pickup Baroness</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Opera</strong></td>
+                                        <td>Tank Romulo, Shield Wall on enrage</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Curator</strong></td>
+                                        <td>Stack point A during evocate</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Prince</strong></td>
+                                        <td>Face away from raid, move on infernals</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="compact-sidebar">
+                        <!-- Status -->
+                        <div class="compact-card">
+                            <div class="compact-card-header">
+                                <span class="compact-card-title">Readiness</span>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
+                                        <span>Gear</span>
+                                        <span style="color: var(--fel-green);">Ready</span>
+                                    </div>
+                                    <div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
+                                        <span>Consumables</span>
+                                        <span style="color: var(--fel-green);">20/20</span>
+                                    </div>
+                                    <div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
+                                        <span>Enchants</span>
+                                        <span style="color: var(--tbc-gold);">14/15</span>
+                                    </div>
+                                    <div class="progress-bar"><div class="progress-fill" style="width: 93%; background: var(--tbc-gold);"></div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Last Raid Mini -->
+                        <div class="compact-card">
+                            <div class="compact-card-header">
+                                <span class="compact-card-title">Last Raid</span>
+                            </div>
+                            <div class="mini-stats">
+                                <div class="mini-stat">
+                                    <div class="mini-stat-value">2h 15m</div>
+                                    <div class="mini-stat-label">Clear Time</div>
+                                </div>
+                                <div class="mini-stat">
+                                    <div class="mini-stat-value">2</div>
+                                    <div class="mini-stat-label">Wipes</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Top Loot -->
+                        <div class="compact-card">
+                            <div class="compact-card-header">
+                                <span class="compact-card-title">Top Loot Tonight</span>
+                            </div>
+                            <div style="font-size: 14px;">
+                                <div style="padding: 8px 0; border-bottom: 1px solid var(--border);">
+                                    <strong style="color: var(--tbc-gold);">Moroes' Lucky Pocket Watch</strong>
+                                    <div style="font-size: 12px; color: var(--text-secondary);">+12% upgrade • Moroes</div>
+                                </div>
+                                <div style="padding: 8px 0;">
+                                    <strong>Battlescar Boots</strong>
+                                    <div style="font-size: 12px; color: var(--text-secondary);">+8% upgrade • Attumen</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Direction 3: Full Width -->
+    <section id="fullwidth" class="direction-section">
+        <div class="section-header">
+            <h2>Direction 3: Full Width Sections</h2>
+            <p>Horizontal bands of information. Scannable top-to-bottom. Each section is self-contained.</p>
+        </div>
+
+        <div class="mockup-container">
+            <header class="app-header">
+                <div class="app-logo">
+                    <div class="app-logo-icon">P</div>
+                    <span class="app-logo-text">Parsimonie</span>
+                </div>
+                <nav class="app-nav">
+                    <div class="nav-item active">Tonight</div>
+                    <div class="nav-item">Roster</div>
+                    <div class="nav-item">My Loot</div>
+                    <div class="nav-item">Last Raid</div>
+                </nav>
+                <div class="user-avatar">YJ</div>
+            </header>
+
+            <!-- Section 1: Raid + Role -->
+            <div class="full-width-section" style="background: linear-gradient(90deg, var(--bg-elevated) 0%, var(--bg-surface) 100%);">
+                <div class="section-inline">
+                    <div class="raid-icon" style="width: 56px; height: 56px; font-size: 24px;">🏰</div>
+                    <div style="flex: 1;">
+                        <div style="font-size: 12px; color: var(--fel-green); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Tonight's Raid</div>
+                        <h3 style="font-size: 22px; margin-bottom: 2px;">Karazhan — Full Clear</h3>
+                        <p style="color: var(--text-secondary); font-size: 14px;">Wednesday, Feb 5 • 8:00 PM Server • 10 Players</p>
+                    </div>
+                    <div class="your-role">
+                        <div class="role-icon">🛡️</div>
+                        <span class="role-text">Main Tank</span>
+                    </div>
+                    <div style="display: flex; gap: 32px; margin-left: 32px;">
+                        <div class="mini-stat">
+                            <div class="mini-stat-value" style="color: var(--fel-green);">✓</div>
+                            <div class="mini-stat-label">Gear Ready</div>
+                        </div>
+                        <div class="mini-stat">
+                            <div class="mini-stat-value" style="color: var(--fel-green);">✓</div>
+                            <div class="mini-stat-label">Consumables</div>
+                        </div>
+                        <div class="mini-stat">
+                            <div class="mini-stat-value" style="color: var(--tbc-gold);">1</div>
+                            <div class="mini-stat-label">Enchant Missing</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Boss Pills -->
+            <div class="full-width-section">
+                <div style="font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 12px;">YOUR ASSIGNMENTS BY BOSS</div>
+                <div class="boss-pills">
+                    <div class="boss-pill has-assignments">Attumen</div>
+                    <div class="boss-pill has-assignments">Moroes</div>
+                    <div class="boss-pill">Maiden</div>
+                    <div class="boss-pill has-assignments">Opera</div>
+                    <div class="boss-pill has-assignments">Curator</div>
+                    <div class="boss-pill">Shade</div>
+                    <div class="boss-pill">Chess</div>
+                    <div class="boss-pill has-assignments">Prince</div>
+                    <div class="boss-pill">Nightbane</div>
+                </div>
+            </div>
+
+            <!-- Section 3: Quick Links -->
+            <div class="full-width-section">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                    <div class="tab-card">
+                        <div class="tab-card-header">
+                            <div class="tab-card-icon">📊</div>
+                            <span class="tab-card-title">Last Raid Recap</span>
+                        </div>
+                        <div class="tab-card-desc">2 wipes, 2h 15m clear • View details →</div>
+                    </div>
+                    <div class="tab-card">
+                        <div class="tab-card-header">
+                            <div class="tab-card-icon">💎</div>
+                            <span class="tab-card-title">My Loot Priorities</span>
+                        </div>
+                        <div class="tab-card-desc">3 upgrades tonight • Top: Pocket Watch →</div>
+                    </div>
+                    <div class="tab-card">
+                        <div class="tab-card-header">
+                            <div class="tab-card-icon">👥</div>
+                            <span class="tab-card-title">Full Roster</span>
+                        </div>
+                        <div class="tab-card-desc">10/10 confirmed • View assignments →</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Color System -->
+    <section id="colors" class="direction-section">
+        <div class="section-header">
+            <h2>TBC Color System</h2>
+            <p>Fel green + gold palette inspired by The Burning Crusade logo. Dark mode primary, calm confidence aesthetic.</p>
+        </div>
+
+        <div class="color-grid">
+            <div class="color-swatch" style="background: #0d0f0e;">
+                <span class="swatch-name" style="color: var(--text-primary);">Deep Black</span>
+                <span class="swatch-hex">#0d0f0e</span>
+            </div>
+            <div class="color-swatch" style="background: #1a1d1c;">
+                <span class="swatch-name" style="color: var(--text-primary);">Surface</span>
+                <span class="swatch-hex">#1a1d1c</span>
+            </div>
+            <div class="color-swatch" style="background: #252a28;">
+                <span class="swatch-name" style="color: var(--text-primary);">Elevated</span>
+                <span class="swatch-hex">#252a28</span>
+            </div>
+            <div class="color-swatch" style="background: #70c04a;">
+                <span class="swatch-name" style="color: var(--bg-deep);">Fel Green</span>
+                <span class="swatch-hex">#70c04a</span>
+            </div>
+            <div class="color-swatch" style="background: #9dd977;">
+                <span class="swatch-name" style="color: var(--bg-deep);">Fel Light</span>
+                <span class="swatch-hex">#9dd977</span>
+            </div>
+            <div class="color-swatch" style="background: #d4a843;">
+                <span class="swatch-name" style="color: var(--bg-deep);">TBC Gold</span>
+                <span class="swatch-hex">#d4a843</span>
+            </div>
+        </div>
+
+        <div style="max-width: 1280px; margin: 32px auto 0;">
+            <div class="mockup-container" style="padding: 24px;">
+                <h3 style="font-family: 'Outfit', sans-serif; font-size: 18px; margin-bottom: 16px;">Status Colors (No Red)</h3>
+                <div style="display: flex; gap: 24px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span class="status-dot ready"></span>
+                        <span>Ready / Success — Fel Green</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span class="status-dot action"></span>
+                        <span>Action Needed — Gold (not alarming)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span class="status-dot" style="background: var(--text-muted);"></span>
+                        <span>Neutral / Inactive — Gray</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function showDirection(id) {
+            // Hide all sections
+            document.querySelectorAll('.direction-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.direction-tab').forEach(t => t.classList.remove('active'));
+            
+            // Show selected
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Boss pill interaction
+        document.querySelectorAll('.boss-pill').forEach(pill => {
+            pill.addEventListener('click', function() {
+                document.querySelectorAll('.boss-pill').forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

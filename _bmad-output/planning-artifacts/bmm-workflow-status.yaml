@@ -32,35 +32,37 @@ workflow_status:
       note: "Completed - Technical research on Battle.net, WarcraftLogs, Discord, Wowhead APIs"
     
     product-brief:
-      status: "in-progress"
+      status: "_bmad-output/planning-artifacts/product-brief-parsimonie-2026-01-22.md"
       included: true
       agent: "analyst"
       command: "/bmad:bmm:workflows:create-product-brief"
-      note: "Step 2 Vision Discovery in progress - resume with pending questions"
+      note: "Completed 2026-02-04 - Vision, users, MVP features, tech stack defined"
       artifact: "_bmad-output/planning-artifacts/product-brief-parsimonie-2026-01-22.md"
 
   # Phase 2: Planning
   phase_2_planning:
     prd:
-      status: "required"
+      status: "_bmad-output/planning-artifacts/prd.md"
       agent: "pm"
       command: "/bmad:bmm:workflows:create-prd"
-      note: "Product Requirements Document with FRs and NFRs"
+      note: "Completed 2026-02-04 - 36 FRs, 21 NFRs, full MVP scope defined"
     
     create-ux-design:
-      status: "conditional"
+      status: "_bmad-output/planning-artifacts/ux-design-specification.md"
       condition: "if_has_ui"
       agent: "ux-designer"
       command: "/bmad:bmm:workflows:create-ux-design"
-      note: "Determined after PRD"
+      note: "Completed 2026-02-05 - Full UX spec: TBC palette, Direction 3 layout, desktop-first, WCAG AA"
+      artifact: "_bmad-output/planning-artifacts/ux-design-specification.md"
 
   # Phase 3: Solutioning
   phase_3_solutioning:
     create-architecture:
-      status: "required"
+      status: "_bmad-output/planning-artifacts/architecture.md"
       agent: "architect"
       command: "/bmad:bmm:workflows:create-architecture"
-      note: "Complete system design"
+      note: "Completed 2026-02-05 - Modular monolith, Docker deployment, REST API"
+      artifact: "_bmad-output/planning-artifacts/architecture.md"
     
     create-epics-and-stories:
       status: "required"
@@ -90,6 +92,10 @@ workflow_status:
 
 # Next Action
 next:
-  workflow: "research"
-  agent: "analyst"
-  command: "/bmad:bmm:workflows:research"
+  workflow: "create-ux-design"
+  agent: "ux-designer"
+  command: "/bmad:bmm:workflows:create-ux-design"
+  step: 5
+  step_name: "Inspiration Analysis"
+  artifact: "_bmad-output/planning-artifacts/ux-design-specification.md"
+  note: "Resume at Step 5: Inspiration - analyze reference products for UX patterns"
